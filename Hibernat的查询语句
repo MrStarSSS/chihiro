@@ -1,0 +1,64 @@
+    // 只有增删改 一级oid查询 才会自动生成sql语句
+		Customer customser = session.get(Customer.class, "abcdefg");
+		System.out.println(customser);
+    
+    // 全查   类似sql语句的表达式  from 持久化类
+		Query qr = session.createQuery("from Customer");
+		List<Customer> list = qr.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+    
+    // 条件查   类似sql语句的表达式  from 持久化类  where 属性=? 
+		Query qr = session.createQuery("from Customer where cust_name like ?");
+		qr.setParameter(0, "h%");
+		List<Customer> list = qr.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+    
+    // 分页查   类似sql语句的表达式  from 持久化类  where 属性=? 
+		Query qr = session.createQuery("from Customer");
+		// from Customer limit 1,3;
+		qr.setFirstResult(1);
+		qr.setMaxResults(3);
+		
+		List<Customer> list = qr.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+    
+    // 单列查  返回是Object
+		Query qr = session.createQuery("select cust_id from Customer");
+		List<Object> list = qr.list();
+		for (Object object : list) {
+			System.out.println(object);
+		}
+    
+    // 多列查 返回的是Object数组
+		Query qr = session.createQuery("select cust_id,cust_name from Customer");
+		List<Object[]> list = qr.list();
+		for (Object[] object : list) {
+			System.out.println(Arrays.toString(object));
+		}
+    
+    // 投影查询
+				// 1 查多少字段 就需要在持久化类中写多少个构造参数
+        // 2 语法的书写: select new Customer(cust_id,cust_name) from Customer;
+		Query qr = session.createQuery("select new Customer(cust_id,cust_name) from Customer");
+		List<Customer> list = qr.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+    
+    // 排序查
+		Query qr = session.createQuery("from Customer order by cust_id asc");
+		List<Customer> list = qr.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+    
+    // 聚合查
+		Query qr = session.createQuery("select count(*) from Customer");
+		Object obj = qr.uniqueResult();
+		System.out.println(obj);
